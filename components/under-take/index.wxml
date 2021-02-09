@@ -1,0 +1,80 @@
+<view class="suggest-add-way" wx:if="{{model.visible}}">
+	<mp-icon
+	 class="close"
+	 icon="close"
+	 color="black"
+	 size="{{25}}"
+	 bindtap="close"
+	></mp-icon>
+	<view class="stand-box">
+		<view class="share-out">
+			<view class="share-standard-item">
+				<view class="item">
+					<view class="item-left">成本中心
+						<text>*</text>
+					</view>
+					<view class="item-right">
+						<input
+						 type="text"
+						 value="{{model.costCenter.nodeName}}"
+						 disabled="{{true}}"
+						 bindtap="openTree"
+						 data-item="{{model.costCenter}}"
+						 data-tag="costCenter"
+						 data-item-type="3"
+						/>
+					</view>
+				</view>
+			</view>
+			<view class="share-standard-item">
+				<view class="item">
+					<view class="item-left">渠道
+						<text wx:if="{{model.channel.required}}">*</text>
+					</view>
+					<view class="item-right">
+						<input
+						 type="text"
+						 value="{{model.channel.nodeName}}"
+						 disabled="{{true}}"
+						 bindtap="openTree"
+						 data-item="{{model.channel}}"
+						 data-tag="channel"
+						 data-item-type="4"
+						/>
+					</view>
+				</view>
+			</view>
+			<view class="share-standard-item">
+				<view class="item">
+					<view class="item-left">分摊比率</view>
+					<view class="item-right">
+						<text>{{model.ratio}}%</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="footer-box">
+		<view class="footer-title">
+			已分摊
+			<label class="red">({{model.ratio}}%)</label>
+			<template wx:if="{{model.price}}">
+				金额
+				<label class="red">{{model.price }}</label>
+			</template>
+		</view>
+		<button type="warn" bindtap="subInfo">确定</button>
+	</view>
+	<!-- dialog弹窗组件 -->
+	<mp-dialog
+	 title="提示"
+	 show="{{dialogShow}}"
+	 bindbuttontap="tapDialogButton"
+	 buttons="{{buttons}}"
+	>
+		<view>是否报错为默认分摊</view>
+	</mp-dialog>
+	<!-- 下拉树组件 -->
+	<select-tree tree-model="{{treeModel}}" bind:tree-callback="treeCallback"></select-tree>
+</view>
+

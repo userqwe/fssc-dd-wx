@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "tree-list":"../tree-item/index",
+    "mp-searchbar": "weui-miniprogram/searchbar/searchbar"
+  }
+}

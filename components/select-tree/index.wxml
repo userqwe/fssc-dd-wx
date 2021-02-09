@@ -1,0 +1,69 @@
+<view class="box">
+	<view class="dialog" wx:if="{{model.visible}}">
+		<view class="big {{model.params.lessHight?'less-height':''}}">
+			<view class="header-top">
+				<view
+				 wx:if="{{!model.params.hideClear}}"
+				 class="closeText"
+				 bindtap="emptyBtn"
+				>清空
+				</view>
+				<view class="choose-title">
+					选择{{model.params.itemText}}
+				</view>
+				<image
+				 class="closeBtn"
+				 src="../../img/close.png"
+				 mode="aspectFit|aspectFill|widthFix"
+				 lazy-load="false"
+				 bindtap="closeBtn"
+				></image>
+				<!-- <view class="closeBtn" bindtap="closeBtn"></view> -->
+			</view>
+			<view class="search-box" wx:if="{{!model.params.hideSearch}}">
+				<mp-searchbar
+				 ext-class="input-class"
+				 placeholder="搜索"
+				 model:value="{{searchInfo}}"
+				 bindblur="debounce"
+				 bindinput="debounce"
+				 bindclear="inputClear"
+				 search="{{inputSearch}}"
+				></mp-searchbar>
+				<!-- <view class="search">
+					<view class="search-bar">
+						<view class="search-box">
+							<view class="mintui mintui-search search-left"></view>
+							<input
+							 type="text"
+							 confirm-type="search"
+							 class="search-input"
+							 placeholder="搜索"
+							 model:value="{{searchInfo}}"
+							 bindinput="debounce"
+							 bindconfirm="debounce"
+							 bindblur="debounce"
+							/>
+							<view class="clear-btn">
+								<text
+								 class="search-clear"
+								 wx:if="searchInfo"
+								 bindtap="inputClear"
+								>x
+								</text>
+							</view>
+						</view>
+					</view>
+				</view> -->
+			</view>
+			<view class="treeList-box {{model.params.hideSearch?'hide-search':''}} {{model.params.lessHight?'lessh-ight':''}}">
+				<tree-list
+				 lists="{{treeData}}"
+				 bind:hander-select='selectItem'
+				 bind:hander-expand="expandItem"
+				></tree-list>
+			</view>
+		</view>
+	</view>
+</view>
+

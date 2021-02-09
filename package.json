@@ -1,0 +1,17 @@
+{
+  "name": "fssc-dd-wx",
+  "version": "1.0.0",
+  "main": ".postcssrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "miniprogram-computed": "^4.0.1",
+    "postcss-autoreset": "^3.0.3",
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
+}

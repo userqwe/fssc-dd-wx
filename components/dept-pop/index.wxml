@@ -1,0 +1,22 @@
+<view
+ class="dialog"
+ wx:if="{{model.visible}}"
+ bindtap="closeMask"
+>
+	<view class="dialog-container">
+		<view class="department-text">
+			<view
+			 class="text-box"
+			 data-item="{{item}}"
+			 bindtap="chooseItem"
+			 wx:for="{{model.depts}}"
+			 wx:item="item"
+			 wx:key="nodeId"
+			>
+				<view class="text {{item[model.field]==model.selected[model.field]?'choose':''}}">{{item[model.field]}}</view>
+				<view class="text discribe" wx:if="{{item.decrib}}">{{item.decrib}}</view>
+			</view>
+		</view>
+	</view>
+</view>
+

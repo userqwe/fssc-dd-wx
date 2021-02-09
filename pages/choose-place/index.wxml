@@ -1,0 +1,55 @@
+<view class="choose-place">
+	<view class="amap-page-container">
+		<map
+		 id="map"
+		 class="map"
+		 longitude="{{mapData.longitude}}"
+		 latitude="{{mapData.latitude}}"
+		 scale="16"
+		 markers="{{mapData.markers}}"
+		 show-location="{{true}}"
+		 bindregionchange="regionChange"
+		 bindtap=""
+		 bindupdated=""
+		></map>
+	</view>
+	<view class="searchbar">
+		<mp-searchbar cancel="{{false}}" bindfocus="goSearch"></mp-searchbar>
+	</view>
+	<view class="list">
+		<view
+		 class="list-item"
+		 wx:for="{{nearbyList}}"
+		 wx:key="index"
+		>
+			<image
+			 class="img"
+			 src="../../img/pos3.png"
+			 mode="aspectFit|aspectFill|widthFix"
+			 lazy-load="false"
+			 binderror=""
+			 bindload=""
+			></image>
+			<view
+			 class="item-left"
+			 data-item="{{item}}"
+			 bindtap="getIndex"
+			>
+				<view class="main-name">{{item.title}}</view>
+				<view class="sub-name">{{item.address}}</view>
+			</view>
+			<view class="item-right">
+				<button
+				 type="{{item.favorite=='1'?'warn':'default'}}"
+				 size="mini"
+				 plain="{{true}}"
+				 bindtap="collect"
+				 data-item="{{item}}"
+				 data-index="{{index}}"
+				>{{item.favorite=='1'?'已收藏':'收藏'}}
+				</button>
+			</view>
+		</view>
+	</view>
+</view>
+

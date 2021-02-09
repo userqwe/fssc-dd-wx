@@ -1,0 +1,89 @@
+.choose-place {
+    .amap-page-container {
+        .map{
+            // padding-top: 90rpx;
+            width: 100%;
+            height: calc(~' 100vh - 756rpx');
+        }
+    }
+    
+    .list {
+        width: 100%;
+        text-align-last: left;
+        padding: 0 56rpx;
+        background-color: #fff;
+        // height: calc(~'100vh - 826rpx');
+        height: 560rpx;
+        overflow: auto;
+    
+        .list-item {
+            min-height: 140rpx;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 20rpx 0;
+    
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 1rpx;
+                background-color: #d9d9d9;
+                transform-origin: 0 0;
+                transform: scaleY(0.5);
+                box-sizing: border-box;
+            }
+    
+            .item-left {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: flex-start;
+                flex: 1;
+                padding-right: 20rpx;
+                color: #000;
+    
+                .main-name {
+                    font-size: 30rpx;
+                    line-height: 44rpx;
+                    font-weight: bold;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-box-orient: vertical;
+                    display: -webkit-box;
+                }
+    
+                .sub-name {
+                    color: #999;
+                    font-size: 24rpx;
+                    line-height: 44rpx;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-box-orient: vertical;
+                    display: -webkit-box;
+                }
+            }
+    
+            .item-right {
+                /deep/ .mint-button--small {
+                    height: 56rpx;
+                }
+            }
+    
+            .img {
+                position: absolute;
+                left: -20rpx;
+                width: 20rpx;
+                height: 20rpx;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+}

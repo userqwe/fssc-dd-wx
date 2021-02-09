@@ -1,0 +1,109 @@
+<view class="search-place">
+	<view class="searchs">
+		<mp-searchbar model:value="{{searchVal}}" bindinput="searchData"></mp-searchbar>
+	</view>
+	<view class="usual-address" wx:if="{{showUsualAddress}}">
+		<view
+		 class="home"
+		 data-type="homePlace"
+		 bindtap="setUsualPlace"
+		>
+			<view class="title">家庭地址</view>
+			<view class="set-title">
+				<text>{{homePlace.name||'设置家庭地址'}}</text>
+			</view>
+			<view
+			 class="img-set"
+			 wx:if="{{homePlace.name}}"
+			 data-type="homePlace"
+			 data-flag="{{true}}"
+			 bindtap="setUsualPlace"
+			>
+				<image
+				 class=""
+				 src="../../img/edit.png"
+				 mode="aspectFit|aspectFill|widthFix"
+				 lazy-load="false"
+				 binderror=""
+				 bindload=""
+				/>
+			</view>
+		</view>
+
+		<view
+		 class="company"
+		 data-type="companyPlace"
+		 bindtap="setUsualPlace"
+		>
+			<view class="title">公司地址</view>
+			<view class="set-title">
+				<span>{{companyPlace.name||'设置公司地址'}}</span>
+			</view>
+			<view
+			 class="img-set"
+			 wx:if="{{companyPlace.name}}"
+			 data-type="companyPlace"
+			 data-flag="{{true}}"
+			 bindtap="setUsualPlace"
+			>
+				<image
+				 class=""
+				 src="../../img/edit.png"
+				 mode="aspectFit|aspectFill|widthFix"
+				 lazy-load="false"
+				 binderror=""
+				 bindload=""
+				/>
+			</view>
+		</view>
+	</view>
+
+	<view class="list {{showUsualAddress?'':'hide-address'}}">
+		<view
+		 class="list-item"
+		 wx:if="{{suggestList.length}}"
+		 wx:for="{{suggestList}}"
+		 wx:key="index"
+		>
+			<image
+			 class="img"
+			 src="../../img/pos3.png"
+			 mode="aspectFit|aspectFill|widthFix"
+			 lazy-load="false"
+			 binderror=""
+			 bindload=""
+			/>
+			<view
+			 class="item-left"
+			 data-item="{{item}}"
+			 bindtap="getIndex"
+			>
+				<view class="main-name">{{item.name||item.title}}</view>
+				<view class="sub-name">{{item.address}}</view>
+			</view>
+			<view class="item-right">
+				<button
+				 type="{{item.favorite=='1'?'warn':'default'}}"
+				 data-item="{{item}}"
+				 data-index="{{index}}"
+				 bindtap="collect"
+				 size="mini"
+				 plain="{{true}}"
+				>{{item.favorite=='1'?'已收藏':'收藏'}}
+				</button>
+			</view>
+		</view>
+		<view wx:if="{{searchVal&&!suggestList.length}}" class="nodata">
+			<image
+			 class="img"
+			 src="../../img/no_data_icon@2x.png"
+			 mode="aspectFit|aspectFill|widthFix"
+			 lazy-load="false"
+			 binderror=""
+			 bindload=""
+			/>
+			<view class="tip"> 暂无数据</view>
+		</view>
+	</view>
+</view>
+

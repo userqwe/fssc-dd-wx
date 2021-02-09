@@ -1,0 +1,190 @@
+<!--pages/index/index.wxml-->
+<view
+ class="index"
+ hover-class="none"
+ hover-stop-propagation="false"
+>
+	<view
+	 class="main-content"
+	 hover-class="none"
+	 hover-stop-propagation="false"
+	>
+		<view class="top-header">
+			<view class="name">
+				<text class="header-title">入住人: </text>
+				{{userInfo.loginUser&&userInfo.loginUser.userName}}
+				<view class="loc-city">
+					<image
+					 wx:if="{{formData.city.cityName}}"
+					 class="img"
+					 src="../../img/pos1.png"
+					>
+					</image>
+					<text class="{{formData.city.cityName?'showArrow':''}}">{{formData.city.cityName||'选择城市'}}</text>
+				</view>
+			</view>
+			<view class="struct">
+				<text class="dept fs" data-tag="dept"  bindtap="openDept"><text class="dept-child"><i class="header-title">预算部门: </i>{{formData.dept.nodeName}}</text>
+				</text>
+				<text class="dept" data-item="{{formData.company}}" data-tag="company" bindtap="openTree"><text class="dept-child">{{formData.company.nodeName || $t('lang.ddConfig.tip33')}}</text>
+				</text>
+			</view>
+		</view>
+		<view class="nav">
+			<view
+			 class="nav-item {{selected=='1'?'selected':''}}"
+			 wx:if="{{formData.dept.showBusiness}}"
+			 bindtap="navChange"
+			 data-tab="1"
+			>公务用车
+			</view>
+			<view
+			 class="nav-item {{selected=='2'?'selected':''}}"
+			 wx:if="{{formData.dept.showWork}}"
+			 bindtap="navChange"
+			 data-tab="2"
+			>加班用车
+			</view>
+		</view>
+		<view class="address">
+			<view
+			 class="from-address address-cot"
+			 data-type="getOn"
+			 bindtap="choosePlace"
+			>
+				<image class="img" src="../../img/getOn.png"></image>
+				<input
+				 type="text"
+				 value="{{formData.onPlace.name}}"
+				 disabled="{{true}}"
+				 placeholder="请选择上车地点"
+				/>
+				<text>上车地址</text>
+			</view>
+			<view
+			 class="to-address address-cot"
+			 data-type="getOff"
+			 bindtap="choosePlace"
+			>
+				<image class="img" src="../../img/getOff.png"></image>
+				<input
+				 type="text"
+				 value="{{formData.offPlace.name}}"
+				 placeholder="您要去哪儿"
+				 disabled="{{true}}"
+				/>
+			</view>
+		</view>
+
+		<view class="form-info">
+			<view class="item {{subscribeRequired?'hide-border':''}}">
+				<view class="item-left">时间
+					<i>*</i>
+				</view>
+				<view class="btns">
+					<button
+					 type="{{subscribeRequired?'default':'warn'}}"
+					 plain="{{true}}"
+					 data-type="now"
+					 bindtap="toggleBtn"
+					 wx:if="{{showNowBtn}}"
+					 size="mini"
+					>现在
+					</button>
+					<button
+					 type="{{subscribeRequired?'warn':'danger'}}"
+					 plain="{{true}}"
+					 data-type="pre"
+					 bindtap="toggleBtn"
+					 size="mini"
+					>预约
+					</button>
+					<!-- <mt-button class="btn-fl"  :type="subscribeRequired?'default':'danger'" size="small" plain bindtap="toggleBtn('now')" v-if="showNowBtn">{{$t('lang.ddConfig.now')}}</mt-button>
+                <mt-button :type="subscribeRequired?'danger':'default'" size="small" plain bindtap="toggleBtn('pre')" >{{$t('lang.ddConfig.subscribe')}}</mt-button> -->
+				</view>
+			</view>
+			<view class="item" wx:if="{{subscribeRequired}}">
+				<view class="item-left"></view>
+				<view class='item-right'>
+					<input
+					 type="text"
+					 v-model="formData.departureTime"
+					 disabled="{{true}}"
+					 bindtap="showDate=true"
+					/>
+				</view>
+			</view>
+			<view class="item" wx:if="{{selected!='2'}}">
+				<view class="item-left">事由
+					<i>*</i>
+				</view>
+				<view class='item-right'>
+					<input
+					 type="text"
+					 value="{{formData.cause.nodeName}}"
+					 data-tag="cause"
+					 disabled="{{true}}"
+					 bindtap="openDept"
+					/>
+				</view>
+			</view>
+			<view class="item">
+				<view class="item-left">承担部门
+					<i>*</i>
+				</view>
+				<view class='item-right'>
+					<span bindtap="openUnTake">{{formData.underTake}}</span>
+				</view>
+			</view>
+			<view class="item">
+				<view class="item-left">项目
+				</view>
+				<view class='item-right'>
+					<input
+					 type="text"
+					 value="{{formData.project.nodeName}}"
+					 placeholder="请选择项目"
+					 disabled="{{true}}"
+					 data-tag="project"
+					 data-item="{{formData.project}}"
+					 bindtap="openTree"
+					/>
+				</view>
+			</view>
+			<view class="item">
+				<view class="item-left">备注
+					<i>*</i>
+				</view>
+				<view class='item-right'>
+					<input
+					 type="text"
+					 value="{{formData.memo}}"
+					 data-tag="formData.memo"
+					 bindinput="onInput"
+					/>
+				</view>
+			</view>
+		</view>
+		<view class="warm-tips" wx:if="{{warmTip}}">
+			<view class="tip-content">
+				<image
+				 class="img"
+				 src="../../img/tip@2x.png"
+				 wx:if="{{!canOvertime}}"
+				>
+					<input
+					 type="checkbox"
+					 class="checkbox"
+					 vx:else
+					/>
+					<text class="" >{{warmTip}}</text>
+				</image>
+				<span>{{warmTip}}</span>
+			</view>
+		</view>
+	</view>
+	<dept-pop dept-model="{{deptModel}}" bind:callback="deptCallback"></dept-pop>
+	<select-tree tree-model="{{treeModel}}" bind:tree-callback="treeCallback"></select-tree>
+	<under-take undertake-model="{{undertakeModel}}" bind:undertake-callback="undertakeCallback"></under-take>
+</view>
+

@@ -1,0 +1,35 @@
+<view class="select-tree">
+	<view class="view" wx:if="{{lists && lists.length>0}}">
+		<view
+		 class="list"
+		 wx:for="{{lists}}"
+		 wx:key="index"
+		>
+			<view class="list-content">
+				<i
+				 class="icon"
+				 data-item="{{item}}"
+				 data-index="{{index}}"
+				 bindtap="expandItem(item,index)"
+				 wx:if="{{!item.isLeaf}}"
+				></i>
+				<text
+				 class="label {{!item.isLeaf?'less-width':''}}"
+				 data-item="{{item}}"
+				 bindtap="selectItem"
+				>{{item.nodeName}}
+				</text>
+			</view>
+			<tree-item
+			 wx:if="{{!item.isLeaf&&lists[index].open}}"
+			 lists="{{item.children}}"
+			 bind:hander-select='selectItem'
+			 bind:hander-expand="expandItem"
+			></tree-item>
+		</view>
+	</view>
+	<view v-else>
+		{{defaultProp}}
+	</view>
+</view>
+
