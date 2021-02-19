@@ -89,6 +89,7 @@
 					 bindtap="toggleBtn"
 					 wx:if="{{showNowBtn}}"
 					 size="mini"
+					 class="btn btn-fl"
 					>现在
 					</button>
 					<button
@@ -97,21 +98,32 @@
 					 data-type="pre"
 					 bindtap="toggleBtn"
 					 size="mini"
+					 class="btn"
 					>预约
 					</button>
-					<!-- <mt-button class="btn-fl"  :type="subscribeRequired?'default':'danger'" size="small" plain bindtap="toggleBtn('now')" v-if="showNowBtn">{{$t('lang.ddConfig.now')}}</mt-button>
-                <mt-button :type="subscribeRequired?'danger':'default'" size="small" plain bindtap="toggleBtn('pre')" >{{$t('lang.ddConfig.subscribe')}}</mt-button> -->
 				</view>
 			</view>
 			<view class="item" wx:if="{{subscribeRequired}}">
 				<view class="item-left"></view>
 				<view class='item-right'>
-					<input
+					<!-- <input
 					 type="text"
-					 v-model="formData.departureTime"
+					 value="{{formData.departureTime}}"
 					 disabled="{{true}}"
-					 bindtap="showDate=true"
-					/>
+					 bindtap="clickDate"
+					/> -->
+					<picker
+					 mode="multiSelector"
+					 range-key="name"
+					 bindchange="bindMultiPickerChange"
+					 bindcolumnchange="bindMultiPickerColumnChange"
+					 value="{{multiIndex}}"
+					 range="{{multiArray}}"
+					>
+						<view class="picker" style="text-align:right;">
+							{{formData.departureTime}}
+						</view>
+					</picker>
 				</view>
 			</view>
 			<view class="item" wx:if="{{selected!='2'}}">
@@ -186,5 +198,6 @@
 	<dept-pop dept-model="{{deptModel}}" bind:callback="deptCallback"></dept-pop>
 	<select-tree tree-model="{{treeModel}}" bind:tree-callback="treeCallback"></select-tree>
 	<under-take undertake-model="{{undertakeModel}}" bind:undertake-callback="undertakeCallback"></under-take>
+	<!-- <date-picker model="{{datePickerModel}}"></date-picker> -->
 </view>
 

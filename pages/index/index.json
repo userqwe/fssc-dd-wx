@@ -2,6 +2,7 @@
 	"usingComponents": {
 		"dept-pop":"../../components/dept-pop",
 		"select-tree":"../../components/select-tree",
-		"under-take":"../../components/under-take"
+		"under-take":"../../components/under-take",
+		"date-picker":"../../components/date-picker"
 	}
 }

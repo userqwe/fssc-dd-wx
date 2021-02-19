@@ -1,6 +1,7 @@
 // pages/index/index.js
 import request from '../../request'
 import {behavior} from 'miniprogram-computed'
+import dayjs from 'dayjs'
 const app = getApp();
 
 Component({
@@ -38,12 +39,16 @@ Component({
 		deptModel:{}, //部门选择组件model
 		treeModel:{}, //下拉树组件model
 		undertakeModel: {}, //分摊组件model
+		datePickerModel: {}, //日期组件model
 		costRequireList:[], //渠道联动必填数组
 		compRequireList: [], //渠道联动必填数组
-		showNowBtn:false,//是否显示现在按钮
+		showNowBtn:true,//是否显示现在按钮
 		canOvertime: true,//是否可以加班用车
 		subscribeRequired : false, //预约时间是否必填
 		warmTip :'加班提示',//提示
+		mutiArray:[[],[],[]],//日期组件数据
+		multiIndex:[0,0,0],
+		cur:{},//当天日期时间obj
 	},
 	pageLifetimes:{
 		show(){
@@ -79,17 +84,16 @@ Component({
 					});
 				case '0':// 正常填单
 					if (app.firstLoad) { // 第一次加载
-					//   this.formData = {}
-					this.getDefaultValue()
-					//   this.getcurrentPos()
-					app.firstLoad	=false
+						//   this.formData = {}
+						this.getDefaultValue()
+						app.firstLoad=false
 					} else {
 						app.onplace&&this.setData({'formData.onPlace':app.onplace})
 						app.offplace && this.setData({'formData.offPlace':app.offplace})
-						// this.getPriceCoupon()
-						// this.acrossCityCheck()
+						this.getPriceCoupon()
+						this.acrossCityCheck()
 						app.city && this.setData({'formData.city':app.city})
-						// if (this.subscribeRequired && this.formData.departureTime) this.confirmValue(this.formData.departureTime, true)
+						if (this.data.subscribeRequired && this.data.formData.departureTime) this.confirmValue(this.data.formData.departureTime, true)
 					}
 					break
 				case '1':
@@ -227,8 +231,7 @@ Component({
 			const data = {
 				dept: this.data.formData.dept.nodeId,
 				project: this.data.formData.project.nodeId || this.data.loadDefault.project.nodeId,
-				departureTime: '2021-01-22'
-				// departureTime: dateFormat(this.formData.departureTime || Date.now(), 'YYYY-MM-DD')
+				departureTime: dayjs(this.data.formData.departureTime || Date.now()).format('YYYY-MM-DD')
 			}
 			if (this.data.selected == '1') data.official = '1'
 			const result = await request.request({method:'get',url: 'fssc-flight/didi/loadCause',data})
@@ -248,8 +251,7 @@ Component({
 				return
 			}
 			const data = {
-				// time: dateFormat(time, 'YYYY-MM-DD HH:mm:ss'),
-				time:'2021-0208 01:22:33',
+				time: dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
 				dept: this.data.formData.dept.nodeId,
 				cause: this.data.loadDefault.overTimeUseCar.nodeId, // 加班用车事由
 				project: this.data.formData.project.nodeId || this.data.loadDefault.project.nodeId,
@@ -340,8 +342,7 @@ Component({
 			if (this.data.subscribeRequired && !this.data.formData.departureTime) flag = true
 			if (flag) return
 			data.type = this.data.subscribeRequired ? '1' : '0'
-			data.departureTime ='2020-02-02 12:23:34'
-			// data.departureTime = this.data.formData.departureTime ? dateFormat(this.formData.departureTime, 'YYYY-MM-DD HH:mm:ss') : dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+			data.departureTime = dayjs(this.data.formData.departureTime||new Date()).format('YYYY-MM-DD HH:mm:ss')
 			const result = await request.request({url:'fssc-flight/didi/getPriceCoupon',data})
 			if (result.rstCode == 0) {
 				if (!result.data.success) wx.showToast({title:result.data.msg,icon:'none'}) 
@@ -357,8 +358,7 @@ Component({
 				return
 			}
 			const data = {
-				// departureTime: dateFormat(time, 'YYYY-MM-DD HH:mm:ss'),
-				departureTime: '2020-01-22 22:33:33',
+				departureTime: dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
 				dept: this.data.formData.dept.nodeId,
 				cause: this.data.formData.cause.nodeId,
 				project: this.data.formData.project.nodeId || this.data.loadDefault.project.nodeId,
@@ -372,6 +372,49 @@ Component({
 				} 
 				this.setData({selfPay:result.data.success})
 			}
+		},
+		// 跨城校验
+		async acrossCityCheck() {
+			if (!this.data.formData.dept.nodeId) {
+				wx.showToast({title:'33',icon:'none'})
+				return
+			}
+			const dist = this.countDist(this.data.formData)
+			if (dist === 0) return
+			this.setData({crossCity:true})
+			const result = await request.request({method:'post',url:'fssc-flight/didi/acrossCityCheck',data: {
+				dept: this.data.formData.dept.nodeId,
+				dist,
+			}})
+			if (result.rstCode == 0) {
+				if (result.data.success) this.setData({crossCity:false})
+				else wx.showToast({title:result.data.msg,icon:'none'})
+			}
+		},
+		// 计算list里的距离
+		countDist(formData) {
+			if (!formData.onPlace.latitude || !formData.offPlace.latitude) return 0
+			let radLat1 = formData.onPlace.latitude * Math.PI / 180.0
+			let radLat2 = formData.offPlace.latitude * Math.PI / 180.0
+			let a = radLat1 - radLat2 // 纬度差
+			let b = formData.onPlace.longitude * Math.PI / 180.0 - formData.offPlace.longitude * Math.PI / 180.0 // 经度差
+			let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)))
+			s = s * 6378.137
+			return s
+			// let distance = Math.round(s * 1000) // 距离
+		},
+		// 预约日期回调
+		confirmValue(value, flag) {
+			this.setData({'formData.departureTime':dayjs(value).format('YYYY-MM-DD HH:mm')})
+			let minTime = Math.floor(new Date().getTime() / 1000)
+			value = new Date(value).getTime() / 1000
+			if (value - minTime <= 1800) {
+				// if (!flag) this.$toast(this.$t('lang.ddConfig.tip26'))
+				if (!flag) wx.showToast({title:'36',icon:'none'})
+				this.toggleBtn('','pre')
+			}
+			this.getPriceCoupon()
+			if (this.data.selected == '2') this.overTimeCheck(this.data.formData.departureTime || Date.now())
 		},
 		//根据定位获取位置信息及附近信息列表
 		getGeocoder({latitude:lat,longitude:lng}) {
@@ -464,11 +507,11 @@ Component({
 				this.setData({carModel:{}})
 				if (this.data.formData.carWay.nodeId) this.getDefaultCarModel()
 			}
-			//   if (name == 'company'){
-			//     this.apportion()
-			//   }
-			//   if ( this.selected == '2') this.overTimeCheck(this.formData.departureTime || Date.now())
-			//   this.getPriceCoupon()
+			  if (name == 'company'){
+			    this.apportion()
+			  }
+			  if ( this.selected == '2') this.overTimeCheck(this.formData.departureTime || Date.now())
+			  this.getPriceCoupon()
 		},
 		// 获取下拉树参数
 		getParams(type){
@@ -496,7 +539,7 @@ Component({
 				pmsObj: {
 				dept: this.dept.nodeId,
 				project: this.formData.project.nodeId || this.loadDefault.project.nodeId,
-				departureTime: dateFormat(this.formData.departureTime || Date.now(), 'YYYY-MM-DD')
+				departureTime: dayjs(this.formData.departureTime || Date.now()).format('YYYY-MM-DD')
 				}
 			}
 			if (this.selected == '1') params.pmsObj.official = '1'
@@ -580,23 +623,155 @@ Component({
 			this.setData({'formData.channel':data.channel,'formData.costCenter':data.costCenter})
 			if (flag) this.saveUnderTake(data)
 		},
+		//点击选择日期
+		clickDate(e){
+			this.setData({
+				'datePickerModel':{
+					visible:true,
+					time:this.data.formData.departureTime
+				}
+			})
+		},
+		/****值发生改变 */
+		bindMultiPickerChange: function (e) {
+			const multiArray = this.data.multiArray
+			const [i0,i1=0,i2=0] = e.detail.value
+			this.setData({
+				multiIndex: e.detail.value,
+				'formData.departureTime':multiArray[0][i0].id+' '+multiArray[1][i1].id+':'+multiArray[2][i2].id
+			})
+		},
+		 /****列发生改变 */
+		 bindMultiPickerColumnChange: function (e) {
+		 	let that = this
+		 	var data = {
+		 		multiArray: this.data.multiArray,
+		 		multiIndex: this.data.multiIndex
+		 	};
+			 data.multiIndex[e.detail.column] = e.detail.value;
+		 	switch (e.detail.column) {
+		 		case 0:
+					if (this.data.mutiArray[e.detail.column][e.detail.value].id == this.data.cur.day) { // 当天
+					let hour = (new Date().getHours()).toString().padStart(2, '0')
+					let mintue = Math.ceil(new Date().getMinutes() / 10) + 3
+					if (mintue > 5) {
+						hour++
+					}
+					if (hour > 23) {
+						data.multiArray[1] = this.setHourList()
+						data.multiArray[2] = this.setMintuteList(mintue > 5 ? (mintue - 6) : mintue)
+					} else {
+						data.multiArray[1] = this.setHourList(hour)
+						data.multiArray[2] = this.setMintuteList(mintue > 5 ? (mintue - 6) : mintue)
+					}
+					} else {
+						data.multiArray[1] = this.setHourList()
+						data.multiArray[2] = this.setMintuteList()
+					}
+					that.setData({
+						multiArray: data.multiArray
+					})
+		 			break;
+		 		case 1:
+		 			if (this.data.mutiArray[e.detail.column][e.detail.value].id == this.data.cur.hour) { // 当前小时
+		 				let mintue = Math.ceil(new Date().getMinutes() / 10) + 3
+		 				data.multiArray[2] = this.setMintuteList(mintue > 5 ? (mintue - 6) : mintue)
+		 			} else {
+		 				// this.slots[2].values = this.setMintuteList()
+		 				data.multiArray[2] = this.setMintuteList()
+		 			}
+		 			// if (this.isFirst) {
+		 			// 	this.timeModel = {
+		 			// 		one: [dateFormat(this.time, 'YYYY-MM-DD')],
+		 			// 		two: [new Date(this.time).getHours().toString().padStart(2, '0')],
+		 			// 		three: [new Date(this.time).getMinutes().toString().padStart(2, '0')],
+		 			// 	}
+		 			// 	this.isFirst = false
+		 			// }
+		 			that.setData({
+		 				multiArray: data.multiArray
+		 			})
+		 			break;
+		 	}
+		 },
+		 // 获取前后几天
+		GetDateStr(AddDayCount) {
+		var dd = new Date()
+		dd.setDate(dd.getDate() + AddDayCount) // 获取AddDayCount天后的日期  
+		var y = dd.getFullYear()
+		var m = (dd.getMonth() + 1) < 10 ? '0' + (dd.getMonth() + 1) : (dd.getMonth() + 1) // 获取当前月份的日期，不足10补0  
+		var d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate() // 获取当前几号，不足10补0 
+		// var week = new Date(y + '-' + m  + '-' +  d).getDay()
+		// var dayTip = [this.$t('lang.ddConfig.today'), this.$t('lang.ddConfig.tomorrow'), this.$t('lang.ddConfig.nextDay')]
+		var dayTip = ['今天', '明天', '后天']
+		// if (AddDayCount == 0) this.minMD = y + '-' + m  + '-' +  d
+		return {
+			name: `${m}${'月'}${d}${'日'}  ${dayTip[AddDayCount] || ''}`,
+			id: y + '-' + m + '-' + d,
+			parent: '0'
+		}
+		},
+		// 设置小时列表
+		setHourList(i = 0) {
+		const list = []
+		for (i; i < 24; i++) {
+			// let keyval = i < 10 ? '0' + i : i
+			let keyval = i.toString().padStart(2, '0')
+			list.push({
+			name: keyval,
+			id: keyval,
+			parent: '0'
+			})
+		}
+		return list
+		},
+		// 设置分钟列表
+		setMintuteList(i = 0) {
+		const list = []
+		for (i; i < 6; i++) {
+			let nameKey = i == '0' ? '00' : i * 10
+			list.push({
+			name: nameKey,
+			id: nameKey,
+			parent: '0'
+			})
+		}
+		return list
+		},
+		//初始化日期列表
+		setInitDateList(){
+			 let hour = (new Date().getHours()).toString().padStart(2, '0')
+			 let mintue = Math.ceil(new Date().getMinutes() / 10) + 3
+			 if (mintue > 5) hour++
+			 const cur = this.data.cur
+			 const multiArray = this.data.mutiArray
+			 cur.day = this.GetDateStr(0).id
+			 cur.hour = hour
+			 if (hour > 23) multiArray[0] = [this.GetDateStr(1), this.GetDateStr(2), this.GetDateStr(3)]
+			 else multiArray[0] = [this.GetDateStr(0), this.GetDateStr(1), this.GetDateStr(2)]
+			 this.setData({multiArray,cur})
+		},
 		// 切换现在与预约按钮
 		toggleBtn(e,pType) {
 			let type = e ? e.currentTarget.dataset.type:pType
 			if (type == 'now') {
-				this.formData.departureTime = ''
-				this.subscribeRequired = false
+				this.setData({
+					'formData.departureTime': '',
+					'subscribeRequired': false
+				})
 			} else {
 				let hour = (new Date().getHours()).toString().padStart(2, '0')
 				let mintue = Math.ceil(new Date().getMinutes() / 10) + 3
 				if (mintue > 5) hour++
-				const ym = dateFormat(new Date(), 'YYYY-MM-DD ')
+				const ym = dayjs(new Date()).format( 'YYYY-MM-DD ')
 				// let now = (new Date() + 1800000
 				let now = (new Date(ym + hour + ':' + (mintue > 5 ? ((mintue - 6) * 10) : mintue * 10)).getTime())
-				if (this.formData.departureTime && new Date(this.formData.departureTime).getTime() > now) now = this.formData.departureTime
-				this.formData.departureTime = dateFormat(now, 'YYYY-MM-DD HH:mm')
-				this.subscribeRequired = true
-				this.$nextTick()
+				if (this.data.formData.departureTime && new Date(this.data.formData.departureTime).getTime() > now) now = this.data.formData.departureTime
+				this.setData({
+					'formData.departureTime': dayjs(now||new Date()).format('YYYY-MM-DD HH:mm'),
+					'subscribeRequired':true
+				})
+				this.setInitDateList()
 			}
 			this.getPriceCoupon()
 		},
@@ -631,7 +806,7 @@ Component({
 				this.overTimeCheck()
 			} else {
 				if (selected == '1') {
-					this.setData({'formData.cause':this.loadDefault.cityTraffic || {}})
+					this.setData({'formData.cause':this.data.loadDefault.cityTraffic || {}})
 				}
 			}
 			this.getDefaultCarWay()

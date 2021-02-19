@@ -1,0 +1,72 @@
+<view class="time-picker" wx:if="{{model.visible}}">
+	<view class="mask"></view>
+	<view class="time-content">
+		<view class="operate-area">
+			<text class="btn" bindtap="cancel">取消</text>
+			<text>选择时间</text>
+			<text class="btn" bindtap="confirm">确定</text>
+		</view>
+		<picker-view
+		 class="pick-box"
+		 value="{{value}}"
+		 indicator-class=""
+		 indicator-style=""
+		 mask-class=""
+		 mask-style=""
+		 bindchange="pickerChange"
+		>
+			<picker-view-column class="">
+				<view
+				 class="pick-item"
+				 wx:for="{{dataOne}}"
+				 wx:key="value"
+				>{{item.name}}
+				</view>
+			</picker-view-column>
+			<picker-view-column class="">
+				<view
+				 class="pick-item"
+				 wx:for="{{dataTwo}}"
+				 wx:key="value"
+				>{{item.name}}
+				</view>
+			</picker-view-column>
+			<picker-view-column class="">
+				<view
+				 class="pick-item"
+				 wx:for="{{dataThree}}"
+				 wx:key="value"
+				>{{item.name}}
+				</view>
+			</picker-view-column>
+		</picker-view>
+		<!-- <view class="pick pick-one">
+        <picker
+          :data="dataOne"
+          v-model="timeModel.one"
+          @on-change="changeOne"
+          :columns="3"
+          :fixedColumns="3"
+        ></picker>
+      </view>
+      <view class="pick">
+        <picker
+          :data="dataTwo"
+          v-model="timeModel.two"
+          @on-change="changeTwo"
+          :columns="3"
+          :fixedColumns="3"
+        ></picker>
+      </view>
+      <view class="pick">
+        <picker
+          :data="dataThree"
+          v-model="timeModel.three"
+          @on-change="changeThree"
+          :columns="3"
+          :fixedColumns="3"
+        ></picker>
+      </view> -->
+	</view>
+</view>
+

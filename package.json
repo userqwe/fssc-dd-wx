@@ -8,8 +8,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dayjs": "^1.10.4",
     "miniprogram-computed": "^4.0.1",
-    "postcss-autoreset": "^3.0.3",
+    "postcss-autoreset": "^3.0.3"
   },
   "devDependencies": {},
   "keywords": [],

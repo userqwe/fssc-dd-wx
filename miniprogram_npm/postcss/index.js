@@ -4,7 +4,7 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1612446519018, function(require, module, exports) {
+__DEFINE__(1613736040484, function(require, module, exports) {
 
 
 let CssSyntaxError = require('./css-syntax-error')
@@ -98,8 +98,8 @@ LazyResult.registerPostcss(postcss)
 module.exports = postcss
 postcss.default = postcss
 
-}, function(modId) {var map = {"./css-syntax-error":1612446519019,"./declaration":1612446519022,"./lazy-result":1612446519027,"./container":1612446519033,"./processor":1612446519042,"./stringify":1612446519026,"./fromJSON":1612446519043,"./warning":1612446519031,"./comment":1612446519034,"./at-rule":1612446519036,"./result.js":1612446519030,"./input":1612446519040,"./parse":1612446519032,"./list":1612446519039,"./rule":1612446519038,"./root":1612446519037,"./node":1612446519023}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519019, function(require, module, exports) {
+}, function(modId) {var map = {"./css-syntax-error":1613736040485,"./declaration":1613736040488,"./lazy-result":1613736040493,"./container":1613736040499,"./processor":1613736040508,"./stringify":1613736040492,"./fromJSON":1613736040509,"./warning":1613736040497,"./comment":1613736040500,"./at-rule":1613736040502,"./result.js":1613736040496,"./input":1613736040506,"./parse":1613736040498,"./list":1613736040505,"./rule":1613736040504,"./root":1613736040503,"./node":1613736040489}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040485, function(require, module, exports) {
 
 
 let { red, bold, gray, options: colorette } = require('colorette')
@@ -193,8 +193,8 @@ class CssSyntaxError extends Error {
 module.exports = CssSyntaxError
 CssSyntaxError.default = CssSyntaxError
 
-}, function(modId) { var map = {"./terminal-highlight":1612446519020}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519020, function(require, module, exports) {
+}, function(modId) { var map = {"./terminal-highlight":1613736040486}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040486, function(require, module, exports) {
 
 
 let { cyan, gray, green, yellow, magenta } = require('colorette')
@@ -266,8 +266,8 @@ terminalHighlight.registerInput = registerInput
 
 module.exports = terminalHighlight
 
-}, function(modId) { var map = {"./tokenize":1612446519021}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519021, function(require, module, exports) {
+}, function(modId) { var map = {"./tokenize":1613736040487}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040487, function(require, module, exports) {
 
 
 const SINGLE_QUOTE = "'".charCodeAt(0)
@@ -536,7 +536,7 @@ module.exports = function tokenizer (input, options = {}) {
 }
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519022, function(require, module, exports) {
+__DEFINE__(1613736040488, function(require, module, exports) {
 
 
 let Node = require('./node')
@@ -562,8 +562,8 @@ class Declaration extends Node {
 module.exports = Declaration
 Declaration.default = Declaration
 
-}, function(modId) { var map = {"./node":1612446519023}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519023, function(require, module, exports) {
+}, function(modId) { var map = {"./node":1613736040489}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040489, function(require, module, exports) {
 
 
 let CssSyntaxError = require('./css-syntax-error')
@@ -875,8 +875,8 @@ class Node {
 module.exports = Node
 Node.default = Node
 
-}, function(modId) { var map = {"./css-syntax-error":1612446519019,"./stringifier":1612446519024,"./symbols":1612446519025,"./stringify":1612446519026}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519024, function(require, module, exports) {
+}, function(modId) { var map = {"./css-syntax-error":1613736040485,"./stringifier":1613736040490,"./symbols":1613736040491,"./stringify":1613736040492}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040490, function(require, module, exports) {
 
 
 const DEFAULT_RAW = {
@@ -1221,13 +1221,13 @@ class Stringifier {
 module.exports = Stringifier
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519025, function(require, module, exports) {
+__DEFINE__(1613736040491, function(require, module, exports) {
 
 
 module.exports.isClean = Symbol('isClean')
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519026, function(require, module, exports) {
+__DEFINE__(1613736040492, function(require, module, exports) {
 
 
 let Stringifier = require('./stringifier')
@@ -1240,8 +1240,8 @@ function stringify (node, builder) {
 module.exports = stringify
 stringify.default = stringify
 
-}, function(modId) { var map = {"./stringifier":1612446519024}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519027, function(require, module, exports) {
+}, function(modId) { var map = {"./stringifier":1613736040490}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040493, function(require, module, exports) {
 
 
 let MapGenerator = require('./map-generator')
@@ -1746,8 +1746,8 @@ LazyResult.default = LazyResult
 
 Root.registerLazyResult(LazyResult)
 
-}, function(modId) { var map = {"./map-generator":1612446519028,"./symbols":1612446519025,"./stringify":1612446519026,"./warn-once":1612446519029,"./result":1612446519030,"./parse":1612446519032,"./root":1612446519037}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519028, function(require, module, exports) {
+}, function(modId) { var map = {"./map-generator":1613736040494,"./symbols":1613736040491,"./stringify":1613736040492,"./warn-once":1613736040495,"./result":1613736040496,"./parse":1613736040498,"./root":1613736040503}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040494, function(require, module, exports) {
 
 
 let { dirname, resolve, relative, sep } = require('path')
@@ -2037,7 +2037,7 @@ class MapGenerator {
 module.exports = MapGenerator
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519029, function(require, module, exports) {
+__DEFINE__(1613736040495, function(require, module, exports) {
 
 
 let printed = {}
@@ -2052,7 +2052,7 @@ module.exports = function warnOnce (message) {
 }
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519030, function(require, module, exports) {
+__DEFINE__(1613736040496, function(require, module, exports) {
 
 
 let Warning = require('./warning')
@@ -2096,8 +2096,8 @@ class Result {
 module.exports = Result
 Result.default = Result
 
-}, function(modId) { var map = {"./warning":1612446519031}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519031, function(require, module, exports) {
+}, function(modId) { var map = {"./warning":1613736040497}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040497, function(require, module, exports) {
 
 
 class Warning {
@@ -2135,7 +2135,7 @@ module.exports = Warning
 Warning.default = Warning
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519032, function(require, module, exports) {
+__DEFINE__(1613736040498, function(require, module, exports) {
 
 
 let Container = require('./container')
@@ -2179,8 +2179,8 @@ parse.default = parse
 
 Container.registerParse(parse)
 
-}, function(modId) { var map = {"./container":1612446519033,"./parser":1612446519035,"./input":1612446519040}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519033, function(require, module, exports) {
+}, function(modId) { var map = {"./container":1613736040499,"./parser":1613736040501,"./input":1613736040506}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040499, function(require, module, exports) {
 
 
 let Declaration = require('./declaration')
@@ -2612,8 +2612,8 @@ Container.registerAtRule = dependant => {
 module.exports = Container
 Container.default = Container
 
-}, function(modId) { var map = {"./declaration":1612446519022,"./symbols":1612446519025,"./comment":1612446519034,"./node":1612446519023}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519034, function(require, module, exports) {
+}, function(modId) { var map = {"./declaration":1613736040488,"./symbols":1613736040491,"./comment":1613736040500,"./node":1613736040489}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040500, function(require, module, exports) {
 
 
 let Node = require('./node')
@@ -2628,8 +2628,8 @@ class Comment extends Node {
 module.exports = Comment
 Comment.default = Comment
 
-}, function(modId) { var map = {"./node":1612446519023}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519035, function(require, module, exports) {
+}, function(modId) { var map = {"./node":1613736040489}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040501, function(require, module, exports) {
 
 
 let Declaration = require('./declaration')
@@ -3190,8 +3190,8 @@ class Parser {
 
 module.exports = Parser
 
-}, function(modId) { var map = {"./declaration":1612446519022,"./tokenize":1612446519021,"./comment":1612446519034,"./at-rule":1612446519036,"./root":1612446519037,"./rule":1612446519038}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519036, function(require, module, exports) {
+}, function(modId) { var map = {"./declaration":1613736040488,"./tokenize":1613736040487,"./comment":1613736040500,"./at-rule":1613736040502,"./root":1613736040503,"./rule":1613736040504}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040502, function(require, module, exports) {
 
 
 let Container = require('./container')
@@ -3218,8 +3218,8 @@ AtRule.default = AtRule
 
 Container.registerAtRule(AtRule)
 
-}, function(modId) { var map = {"./container":1612446519033}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519037, function(require, module, exports) {
+}, function(modId) { var map = {"./container":1613736040499}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040503, function(require, module, exports) {
 
 
 let Container = require('./container')
@@ -3280,8 +3280,8 @@ Root.registerProcessor = dependant => {
 module.exports = Root
 Root.default = Root
 
-}, function(modId) { var map = {"./container":1612446519033}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519038, function(require, module, exports) {
+}, function(modId) { var map = {"./container":1613736040499}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040504, function(require, module, exports) {
 
 
 let Container = require('./container')
@@ -3310,8 +3310,8 @@ Rule.default = Rule
 
 Container.registerRule(Rule)
 
-}, function(modId) { var map = {"./container":1612446519033,"./list":1612446519039}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519039, function(require, module, exports) {
+}, function(modId) { var map = {"./container":1613736040499,"./list":1613736040505}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040505, function(require, module, exports) {
 
 
 let list = {
@@ -3370,7 +3370,7 @@ module.exports = list
 list.default = list
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519040, function(require, module, exports) {
+__DEFINE__(1613736040506, function(require, module, exports) {
 
 
 let { fileURLToPath, pathToFileURL } = require('url')
@@ -3571,8 +3571,8 @@ if (terminalHighlight && terminalHighlight.registerInput) {
   terminalHighlight.registerInput(Input)
 }
 
-}, function(modId) { var map = {"./terminal-highlight":1612446519020,"./css-syntax-error":1612446519019,"./previous-map":1612446519041}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519041, function(require, module, exports) {
+}, function(modId) { var map = {"./terminal-highlight":1613736040486,"./css-syntax-error":1613736040485,"./previous-map":1613736040507}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040507, function(require, module, exports) {
 
 
 let { existsSync, readFileSync } = require('fs')
@@ -3718,7 +3718,7 @@ module.exports = PreviousMap
 PreviousMap.default = PreviousMap
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519042, function(require, module, exports) {
+__DEFINE__(1613736040508, function(require, module, exports) {
 
 
 let LazyResult = require('./lazy-result')
@@ -3790,8 +3790,8 @@ Processor.default = Processor
 
 Root.registerProcessor(Processor)
 
-}, function(modId) { var map = {"./lazy-result":1612446519027,"./root":1612446519037}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1612446519043, function(require, module, exports) {
+}, function(modId) { var map = {"./lazy-result":1613736040493,"./root":1613736040503}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1613736040509, function(require, module, exports) {
 
 
 let Declaration = require('./declaration')
@@ -3847,7 +3847,7 @@ function fromJSON (json, inputs) {
 module.exports = fromJSON
 fromJSON.default = fromJSON
 
-}, function(modId) { var map = {"./declaration":1612446519022,"./previous-map":1612446519041,"./comment":1612446519034,"./at-rule":1612446519036,"./input":1612446519040,"./root":1612446519037,"./rule":1612446519038}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1612446519018);
+}, function(modId) { var map = {"./declaration":1613736040488,"./previous-map":1613736040507,"./comment":1613736040500,"./at-rule":1613736040502,"./input":1613736040506,"./root":1613736040503,"./rule":1613736040504}; return __REQUIRE__(map[modId], modId); })
+return __REQUIRE__(1613736040484);
 })()
 //# sourceMappingURL=index.js.map
