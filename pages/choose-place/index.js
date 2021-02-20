@@ -77,8 +77,7 @@ const componentOptions = {
     },
     // 处理存储地址参数
     parseAddress(item){
-      console.log('item: ', item);
-      let {lat,lng} = item.location
+      let {lat,lng} = item.location||{lat:item.latitude,lng:item.longitude}
       let data = {
         useAddress: '0',
         cityName: item.cityName || item.ad_info.city,

@@ -3,7 +3,8 @@
   "pages": [
     "pages/index/index",
     "pages/choose-place/index",
-    "pages/search-place/index"
+    "pages/search-place/index",
+    "pages/city-list/index"
   ],
   "sitemapLocation": "sitemap.json",
   "window":{

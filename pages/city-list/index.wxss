@@ -1,0 +1,41 @@
+.city-list {
+  height: 100%;
+}
+.city-list .current-pos {
+  height: 120rpx;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  background-color: #fff;
+  padding: 0 30rpx;
+}
+.city-list .current-pos p {
+  font-size: 24rpx;
+  color: #666;
+  text-align: left;
+  line-height: 60rpx;
+}
+.city-list .current-pos .city {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.city-list .current-pos .city img {
+  vertical-align: middle;
+  width: 32rpx;
+}
+.city-list .current-pos .city .city-name {
+  color: #000;
+  font-weight: bold;
+}
+.city-list .current-pos .city .reload-pos {
+  color: #f44848;
+  font-size: 24rpx;
+  position: relative;
+  bottom: 20rpx;
+}
+.city-list .current-pos .city .reload-pos img {
+  width: 28rpx;
+  height: 28rpx;
+  vertical-align: middle;
+}

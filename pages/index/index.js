@@ -49,6 +49,7 @@ Component({
 		mutiArray:[[],[],[]],//日期组件数据
 		multiIndex:[0,0,0],
 		cur:{},//当天日期时间obj
+		selfPay:false,//自費
 	},
 	pageLifetimes:{
 		show(){
@@ -83,9 +84,9 @@ Component({
 						mask: false,
 					});
 				case '0':// 正常填单
-					if (app.firstLoad) { // 第一次加载
-						//   this.formData = {}
-						this.getDefaultValue()
+				this.getDefaultValue()
+				if (app.firstLoad) { // 第一次加载
+					//   this.formData = {}
 						app.firstLoad=false
 					} else {
 						app.onplace&&this.setData({'formData.onPlace':app.onplace})
@@ -448,6 +449,138 @@ Component({
 				return cityObj
 			}
 		},
+		// 叫车
+		async placeOrder(){
+		// if (!this.dept.nodeId) {
+		//   this.$toast(this.$t('lang.ddConfig.tip34'))
+		//   return
+		// }
+		if (this.checkEmpty(true)) return
+		let data = {
+			flat: this.data.formData.onPlace.latitude,
+			flng: this.data.formData.onPlace.longitude,
+			tlat: this.data.formData.offPlace.latitude,
+			tlng: this.data.formData.offPlace.longitude,
+			cityId: this.data.formData.onPlace.cityId,
+			toCityId: this.data.formData.offPlace.cityId,
+			startName: this.data.formData.onPlace.name,
+			toName: this.data.formData.offPlace.name,
+			departureTime: dayjs(this.data.formData.departureTime || new Date()).format('YYYY-MM-DD HH:mm:ss') ,
+			type: this.data.subscribeRequired ? '1' : '0',
+			carWay: this.data.formData.carWay.nodeId,
+			carModel: this.data.formData.carModel.nodeId,
+			project: this.data.formData.project.nodeId || this.data.loadDefault.project.nodeId,
+			cause: this.data.formData.cause.nodeId,
+			dept: this.data.formData.dept.nodeId,
+			estimatedAmount: this.data.price,
+			company: this.data.formData.company.nodeId,
+			costCenter: this.data.formData.costCenter.nodeId,
+			channel: this.data.formData.channel.nodeId,
+			memo: this.data.formData.memo,
+		}
+		const result = await request.request({url:'fssc-flight/didi/placeOrder',method:'post'})
+		if (result.rstCode == 0) {
+			if (result.data.success){
+			// this.$messageBox({
+			//   title: this.$t('lang.ddConfig.tip20'),
+			//   message: this.$t('lang.ddConfig.tip19'),
+			//   confirmButtonText: this.$t('lang.ddConfig.sure'),
+			//   showCancelButton: false,
+			//   closeOnClickModal: false
+			// }).then(action => {
+			//   if (action == 'confirm')  {
+			//     this.$nativeApi.neiOpenUrl(result.data.url)
+			//     if (this.$nativeApi.isIOS()) this.$nativeApi.viewAppears(this.initIndex)
+			//     this.saveAddress(this.parseAddress(this.formData.offPlace))
+			//     this.$store.commit('updateLoadState', false)
+			//   }
+			// })
+			this.$nativeApi.neiOpenUrl(result.data.url)
+			// if (this.$nativeApi.isIOS()) 
+			this.$nativeApi.viewAppears(this.initIndex, this.$store.state.extra.appName)
+			this.saveAddress(this.parseAddress(this.formData.offPlace))
+			//   this.$store.commit('updateLoadState', false)
+			} 
+		} 
+		},
+		// 自助打车
+		async selfPayCar(){
+		// const pName = ''
+		// this.$nativeApi.callApp(pName)
+		this.$toast(this.$t('lang.ddConfig.tip31'))
+		},
+		// 校验必填
+		checkEmpty(bool) {
+			let flag = false
+			let data = {
+				onPlace: this.data.formData.onPlace.latitude,
+				offPlace: this.data.formData.offPlace.latitude,
+				carWay: this.data.formData.carWay.nodeId,
+				company: this.data.formData.company.nodeId,
+				carModel: this.data.formData.carModel.nodeId,
+				cause: this.data.formData.cause.nodeId,
+				dept: this.data.formData.dept.nodeId,
+				// estimatedAmount: this.price,
+				undertake: this.data.formData.underTake,
+			}
+			for (const key in data) {
+				if (!data[key]) {
+					// bool && this.$toast(this.$t('lang.ddConfig.tip52', {
+					// 	name: this.$t('lang.ddConfig.' + key)
+					// }))
+					bool&&wx.showToast({title:key,icon:'none'})
+					flag = true
+					break
+				}
+			}
+			if (!flag && this.subscribeRequired && !this.formData.departureTime) {
+				flag = true
+				// bool && this.$toast(this.$t('lang.ddConfig.tip52', {
+				// 	name: this.$t('lang.ddConfig.subscribeTime')
+				// }))
+				bool && wx.showToast({
+					title: '请选择时间',
+					icon: 'none'
+				})
+			}
+			if (!flag && !this.formData.memo) {
+				flag = true
+				// bool && this.$toast(this.$t('lang.ddConfig.pleaseInput') + this.$t('lang.ddConfig.memo'))
+				bool && wx.showToast({
+					title: '请填写备注',
+					icon: 'none'
+				})
+			}
+			// if (!flag && this.formData.channel.required && !this.formData.channel.nodeId) {
+			//   flag = true
+			//   bool && this.$toast(this.$t('lang.ddConfig.tip52', {name: this.$t('lang.ddConfig.channel')}))
+			// }
+			if (!flag && !this.allowFillForm) {
+				flag = true
+				bool && this.checkOrgIsOpenDiDiService(true)
+			}
+			if (!flag && this.loadDefault.specialAccount) { // 特殊账号
+				flag = true
+				// bool && this.$toast(this.$t('lang.ddConfig.tip55'))
+				bool && wx.showToast({
+					title: '特殊账户不能叫车，请联系管理员',
+					icon: 'none'
+				})
+			}
+			if (!flag && this.crossCity) {
+				flag = true
+				bool && this.acrossCityCheck()
+			}
+			if (!flag && this.selected == '2' && !this.canOvertime) {
+				flag = true
+				bool && this.overTimeCheck()
+			}
+			if (!flag && !this.price) {
+				flag = true
+				bool && this.getPriceCoupon()
+			}
+			return flag
+		},
 		//切换tab
 		navChange(e) {
 			const tab = e.currentTarget.dataset.tab
@@ -551,7 +684,7 @@ Component({
 				hideSearch: true,
 				lessHight: true,
 				pmsObj: {
-				dept: this.dept.nodeId,
+				dept: this.data.forEach.dept.nodeId,
 				}
 			}
 			break
@@ -562,8 +695,8 @@ Component({
 				lessHight: true,
 				itemText: '车型',
 				pmsObj: {
-				dept: this.dept.nodeId,
-				sourceId: this.formData.carWay.nodeId,
+				dept: this.data.formData.dept.nodeId,
+				sourceId: this.data.formData.carWay.nodeId,
 				}
 			}
 			break
@@ -827,6 +960,8 @@ Component({
 		},
 	},
 	computed:{
-
+		forecast(data) {
+			return data.formData.onPlace.latitude && data.formData.offPlace.latitude && ((data.subscribeRequired && data.formData.departureTime) || !data.subscribeRequired)
+		},
 	}
 })

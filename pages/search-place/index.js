@@ -76,22 +76,22 @@ const componentOptions = {
       this.$router.push({name: 'choosePlace', params: {type: this.type}})
     },
     // 点击常用地址，设置常用地址或者设置上车地址或下车地址
-    async setUsualPlace(setType, flag){
-      if (this[setType].name && !flag){// 有值，直接设置上车，下车地址
-        let address = await this.matchCity(this.parseAddress(this[setType]))
+    async setUsualPlace(e){
+      const {type:setType,flag} =e.currentTarget.dataset
+      if (this.data[setType].name && !flag){// 有值，直接设置上车，下车地址
+        let address = await this.matchCity(this.parseAddress(this.data[setType]))
         this.$store.commit('updateplace', {types: this.type, obj: address})
         this.$router.replace({name: 'index'})
       } else {
         if (setType == 'companyPlace'){
-          this.title = this.$t('lang.ddConfig.tip44')
-          this.defaultWorld = this.$t('lang.ddConfig.tip46')
+          // this.title = this.$t('lang.ddConfig.tip44')
+          // this.defaultWorld = this.$t('lang.ddConfig.tip46')
         } else {
-          this.title = this.$t('lang.ddConfig.tip45')
-          this.defaultWorld = this.$t('lang.ddConfig.tip47')
+          // this.title = this.$t('lang.ddConfig.tip45')
+          // this.defaultWorld = this.$t('lang.ddConfig.tip47')
         }
-        this.$refs.search.$refs.search.focus()
-        this.showUsualAddress = false
-        this.setType = setType
+        // this.$refs.search.$refs.search.focus()
+        this.setData({showUsualAddress:false,setType})
       }
     },
     searchData(){
@@ -115,11 +115,11 @@ const componentOptions = {
       const item =e.currentTarget.dataset.item
       if (this.data.showUsualAddress){
         let address = await this.matchCity(this.parseAddress(item, null))
-        app[this.data.type]=address
-        wx.redirectTo({url:'pages/index/index'})
+        app[this.data.type=='getOn'?'onplace':'offplace']=address
+        wx.redirectTo({url:'/pages/index/index'})
       } else {
         let setType = this.parseAddress(item, this.data.setType)
-        await this.saveAddress(setType, this.setType)
+        await this.saveAddress(setType, this.data.setType)
         this.setData({
           [this.data.setType]: setType,
           showUsualAddress:true,
@@ -156,8 +156,7 @@ const componentOptions = {
     },
     // 处理存储地址参数
     parseAddress(item){
-      console.log('item: ', item);
-      let {lat,lng} = item.location
+      let {lat,lng} = item.location||{lat:item.latitude,lng:item.longitude}
       let data = {
         useAddress: '0',
         cityName: item.cityName || item.ad_info.city,

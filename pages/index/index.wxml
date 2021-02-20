@@ -13,7 +13,13 @@
 			<view class="name">
 				<text class="header-title">入住人: </text>
 				{{userInfo.loginUser&&userInfo.loginUser.userName}}
-				<view class="loc-city">
+				<navigator
+				 class="loc-city"
+				 target=""
+				 url="/pages/city-list/index?city={{formData.city.cityName}}"
+				 hover-class="navigator-hover"
+				 open-type="navigate"
+				>
 					<image
 					 wx:if="{{formData.city.cityName}}"
 					 class="img"
@@ -21,7 +27,7 @@
 					>
 					</image>
 					<text class="{{formData.city.cityName?'showArrow':''}}">{{formData.city.cityName||'选择城市'}}</text>
-				</view>
+				</navigator>
 			</view>
 			<view class="struct">
 				<text class="dept fs" data-tag="dept"  bindtap="openDept"><text class="dept-child"><i class="header-title">预算部门: </i>{{formData.dept.nodeName}}</text>
@@ -193,6 +199,76 @@
 				</image>
 				<span>{{warmTip}}</span>
 			</view>
+		</view>
+		<view class="car-choose" wx:if="{{forecast&&!selfPay}}">
+			<view class="choose-left">
+				<view
+				 bindtap="openTree"
+				 data-item="{{formData.cause}}"
+				 data-tag="carWay"
+				 class="carway {{!formData.carWay.nodeName?'noData':''}}"
+				>{{formData.carWay.nodeName|| '选择车型'}}
+				</view>
+				<view
+				 bindtap="openTree"
+				 data-item="{{formData.carModel}}"
+				 data-tag="carModel"
+				 class="car-model {{!formData.carWcarModelay.nodeName?'noData disabled':''}}"
+				>
+					<image
+					 wx:if="{{formData.carModel.nodeName}}"
+					 class="img"
+					 src="../../img/car.png"
+					 mode="widthFix"
+					 lazy-load="false"
+					 binderror=""
+					 bindload=""
+					/>
+					{{formData.carModel.nodeName ||'选择用车方式'}}
+				</view>
+			</view>
+			<view class="choose-right">
+				<view>
+					<image
+					 src="../../img/bankCard.png"
+					 class="img"
+					 mode="widthFix"
+					 lazy-load="false"
+					 binderror=""
+					 bindload=""
+					/>
+					預估價
+					<span class="about"></span>
+					<span class="price">{{realCouponPrice}}</span>
+					<span class="yuan">元</span>
+				</view>
+				<view>临时占用预算{{price}}</view>
+			</view>
+		</view>
+		<view class="footer">
+			<block wx:if="{{!selfPay}}">
+				<button
+				 type="default"
+				 wx:if="{{notSubmit}}"
+				 bindtap="placeOrder"
+				 size="default"
+				>提交
+				</button>
+				<button
+				 type="warn"
+				 wx:else
+				 bindtap="placeOrder"
+				 size="default"
+				>提交
+				</button>
+			</block>
+			<button
+			 wx:else
+			 type="default"
+			 wx:else
+			 bindtap="selfPayCar"
+			>自费打车
+			</button>
 		</view>
 	</view>
 	<dept-pop dept-model="{{deptModel}}" bind:callback="deptCallback"></dept-pop>

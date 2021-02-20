@@ -405,6 +405,9 @@
     position: fixed;
     left: 0;
     bottom: 0;
+    button{
+        width: 100% !important;
+    }
 
     /deep/ .mint-button--danger {
         background-image: linear-gradient(90deg, #FF944F 0%, #FF5050 100%);
@@ -435,6 +438,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1;
 
     .choose-left {
         height: 100%;
@@ -442,7 +446,7 @@
         font-size: 24rpx;
         display: flex;
 
-        >div {
+        >view {
             flex: 1;
             display: flex;
             align-items: center;
@@ -458,11 +462,7 @@
                 flex: 1.4;
             }
 
-            img {
-                width: 40rpx;
-                margin-right: 6rpx;
-            }
-
+            
             &::after {
                 content: '';
                 display: inline-block;
@@ -528,6 +528,11 @@
             }
         }
     }
+    .img {
+        width: 40rpx;
+        margin-right: 6rpx;
+    }
+
 }
 
 .checkbox {

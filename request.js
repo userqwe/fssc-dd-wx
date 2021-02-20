@@ -18,7 +18,6 @@ class Request {
                 success(res){
                     const data = res.data
                     resolve(data)
-                    wx.hideLoading()
                     if(data.rstCode!='0'){
                         wx.showToast({
                             title: data.data.errorMsg,
@@ -29,7 +28,6 @@ class Request {
                     }
                 },
                 fail(res){
-                    wx.hideLoading()
                     wx.showToast({
                         title: res.data.rstMsg,
                         icon: 'none',
@@ -37,6 +35,9 @@ class Request {
                         mask: true,
                     });
                     reject(res)
+                },
+                complete(){
+                    wx.hideLoading()
                 }
             })
         })
